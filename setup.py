@@ -23,6 +23,6 @@ setup(
     zip_safe=False,
     install_requires=[
         'Django>=1.4',
-        'python-memcached>=1.53',
+        'python3-memcached>=1.51',
     ]
 )

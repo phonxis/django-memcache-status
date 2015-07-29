@@ -36,7 +36,7 @@ def get_cache_stats(parser, token):
 
 @register.filter
 def prettyname(name):
-    return ' '.join([word.capitalize() for word in name.decode('utf-8').split('_')])
+    return ' '.join([word.capitalize() for word in name.split('_')])
 
 @register.filter
 def prettyvalue(value, key):

@@ -1,6 +1,11 @@
 from django import template
 from django.conf import settings
-from django.core.cache import get_cache
+try:
+    # django < 1.9
+    from django.core.cache import get_cache
+except ImportError:
+    # django 1.9+
+    from django.core.cache import caches as get_cache
 
 if get_cache.__module__.startswith('debug_toolbar'):
     from debug_toolbar.panels.cache import base_get_cache as get_cache
@@ -16,7 +21,12 @@ class CacheStats(template.Node):
         cache_stats = []
         for cache_backend_nm, cache_backend_attrs in settings.CACHES.items():
             try:
-                cache_backend = get_cache(cache_backend_nm)
+                try:
+                    # django < 1.9
+                    cache_backend = get_cache(cache_backend_nm)
+                except TypeError:
+                    # django 1.9+
+                    cache_backend = get_cache[cache_backend_nm]
                 this_backend_stats = cache_backend._cache.get_stats()
                 # returns list of (name, stats) tuples
                 for server_name, server_stats in this_backend_stats:
